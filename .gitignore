@@ -1,0 +1,46 @@
+# Noir specific
+target/
+proofs/
+circuits/
+*.acir
+*.acir.bp
+*.r1cs
+
+# Noir build artifacts
+**/node_modules
+**/artifacts
+**/dist
+**/package-lock.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# Witness and proof files
+*.witness
+*.proof
+witness.json
+proof.json
+
+# Dependency directories
+cache/ 
