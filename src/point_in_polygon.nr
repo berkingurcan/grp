@@ -301,3 +301,131 @@ fn test_non_convex_quadrilateral() {
     let boundary_point = Point { x: 1_500_000, y: 1_500_000 };
     assert(is_point_in_polygon(boundary_point, arrow));
 }
+
+#[test]
+fn test_phuket_island() {
+    // Simplified representation of Phuket Island, Thailand using 4 points
+    // Coordinates are in fixed-point format (multiplied by 10^6)
+    // These are approximate coordinates for the corners of Phuket
+    let phuket = [
+        Point { x: 7_880_000, y: 98_295_000 },  // Southern point near Promthep Cape
+        Point { x: 7_984_000, y: 98_367_000 },  // Eastern point near Cape Yamu
+        Point { x: 8_172_000, y: 98_298_000 },  // Northern point near Sarasin Bridge
+        Point { x: 7_953_000, y: 98_277_000 }   // Western point near Patong Beach
+    ];
+    
+    // Test point inside Phuket (near Phuket Town)
+    let phuket_town = Point { x: 7_953_000, y: 98_338_000 };
+    assert(is_point_in_polygon(phuket_town, phuket));
+    
+    // Test point outside, in the Andaman Sea
+    let andaman_sea = Point { x: 7_900_000, y: 98_200_000 };
+    assert(!is_point_in_polygon(andaman_sea, phuket));
+    
+    // Test point outside, in Phang Nga Bay
+    let phang_nga_bay = Point { x: 8_050_000, y: 98_400_000 };
+    assert(!is_point_in_polygon(phang_nga_bay, phuket));
+    
+    // Test point on approximate boundary (near Bang Tao Beach)
+    let bang_tao = Point { x: 8_023_000, y: 98_288_000 };
+    assert(is_point_in_polygon(bang_tao, phuket));
+}
+
+#[test]
+fn test_denizli_turkey() {
+    // Simplified representation of Denizli, Turkey using 4 points
+    // Coordinates are in fixed-point format (multiplied by 10^6)
+    // These are approximate coordinates for the corners of Denizli province
+    let denizli = [
+        Point { x: 37_465_000, y: 28_740_000 },  // Northwest corner near Tavas
+        Point { x: 37_595_000, y: 29_456_000 },  // Northeast corner near Civril
+        Point { x: 37_253_000, y: 29_395_000 },  // Southeast corner near Acipayam
+        Point { x: 37_344_000, y: 28_642_000 }   // Southwest corner near Kale
+    ];
+    
+    // Test point inside Denizli (near Denizli city center)
+    let denizli_center = Point { x: 37_785_000, y: 29_09_000 };
+    assert(is_point_in_polygon(denizli_center, denizli));
+    
+    // Test point outside, to the north (near Usak)
+    let outside_north = Point { x: 38_000_000, y: 29_200_000 };
+    assert(!is_point_in_polygon(outside_north, denizli));
+    
+    // Test point outside, to the east (near Burdur)
+    let outside_east = Point { x: 37_400_000, y: 29_700_000 };
+    assert(!is_point_in_polygon(outside_east, denizli));
+    
+    // Test point on approximate boundary (near Pamukkale)
+    let pamukkale = Point { x: 37_540_000, y: 29_120_000 };
+    assert(is_point_in_polygon(pamukkale, denizli));
+    
+    // Test famous landmark inside (Hierapolis/Pamukkale)
+    let hierapolis = Point { x: 37_526_000, y: 29_124_000 };
+    assert(is_point_in_polygon(hierapolis, denizli));
+}
+
+#[test]
+fn test_moscow_russia() {
+    // Simplified representation of Moscow, Russia using 4 points
+    // Coordinates are in fixed-point format (multiplied by 10^6)
+    // These are approximate coordinates for the corners of Moscow city
+    let moscow = [
+        Point { x: 55_835_000, y: 37_380_000 },  // Northwest corner 
+        Point { x: 55_910_000, y: 37_820_000 },  // Northeast corner
+        Point { x: 55_575_000, y: 37_750_000 },  // Southeast corner
+        Point { x: 55_570_000, y: 37_355_000 }   // Southwest corner
+    ];
+    
+    // Test point inside Moscow (near Kremlin)
+    let kremlin = Point { x: 55_752_000, y: 37_618_000 };
+    assert(is_point_in_polygon(kremlin, moscow));
+    
+    // Test point inside Moscow (Red Square)
+    let red_square = Point { x: 55_753_000, y: 37_620_000 };
+    assert(is_point_in_polygon(red_square, moscow));
+    
+    // Test point outside, to the south
+    let south_point = Point { x: 55_500_000, y: 37_600_000 };
+    assert(!is_point_in_polygon(south_point, moscow));
+    
+    // Test point outside, to the northeast
+    let northeast_point = Point { x: 56_000_000, y: 38_000_000 };
+    assert(!is_point_in_polygon(northeast_point, moscow));
+    
+    // Test point on approximate boundary
+    let boundary_point = Point { x: 55_750_000, y: 37_380_000 };
+    assert(is_point_in_polygon(boundary_point, moscow));
+}
+
+#[test]
+fn test_st_petersburg_russia() {
+    // Simplified representation of St. Petersburg (formerly Leningrad), Russia using 4 points
+    // Coordinates are in fixed-point format (multiplied by 10^6)
+    // These are approximate coordinates for the corners of St. Petersburg city
+    let st_petersburg = [
+        Point { x: 60_050_000, y: 30_050_000 },  // Northwest corner
+        Point { x: 60_090_000, y: 30_550_000 },  // Northeast corner
+        Point { x: 59_800_000, y: 30_650_000 },  // Southeast corner
+        Point { x: 59_830_000, y: 30_050_000 }   // Southwest corner
+    ];
+    
+    // Test point inside St. Petersburg (near Winter Palace/Hermitage)
+    let winter_palace = Point { x: 59_939_000, y: 30_313_000 };
+    assert(is_point_in_polygon(winter_palace, st_petersburg));
+    
+    // Test point inside St. Petersburg (Peter and Paul Fortress)
+    let fortress = Point { x: 59_950_000, y: 30_317_000 };
+    assert(is_point_in_polygon(fortress, st_petersburg));
+    
+    // Test point outside, to the south
+    let south_point = Point { x: 59_700_000, y: 30_300_000 };
+    assert(!is_point_in_polygon(south_point, st_petersburg));
+    
+    // Test point outside, to the east (toward Lake Ladoga)
+    let east_point = Point { x: 59_900_000, y: 31_000_000 };
+    assert(!is_point_in_polygon(east_point, st_petersburg));
+    
+    // Test point on approximate boundary (near Pulkovo Airport)
+    let pulkovo = Point { x: 59_800_000, y: 30_270_000 };
+    assert(is_point_in_polygon(pulkovo, st_petersburg));
+}
