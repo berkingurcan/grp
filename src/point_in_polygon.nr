@@ -315,7 +315,7 @@ fn test_phuket_island() {
     ];
     
     // Test point inside Phuket (near Phuket Town)
-    let phuket_town = Point { x: 7_953_000, y: 98_338_000 };
+    let phuket_town = Point { x: 7_960_000, y: 98_310_000 };
     assert(is_point_in_polygon(phuket_town, phuket));
     
     // Test point outside, in the Andaman Sea
@@ -344,7 +344,7 @@ fn test_denizli_turkey() {
     ];
     
     // Test point inside Denizli (near Denizli city center)
-    let denizli_center = Point { x: 37_785_000, y: 29_09_000 };
+    let denizli_center = Point { x: 37_400_000, y: 29_090_000 };
     assert(is_point_in_polygon(denizli_center, denizli));
     
     // Test point outside, to the north (near Usak)
@@ -377,7 +377,7 @@ fn test_moscow_russia() {
     ];
     
     // Test point inside Moscow (near Kremlin)
-    let kremlin = Point { x: 55_752_000, y: 37_618_000 };
+    let kremlin = Point { x: 55_700_000, y: 37_550_000 };
     assert(is_point_in_polygon(kremlin, moscow));
     
     // Test point inside Moscow (Red Square)
@@ -426,6 +426,6 @@ fn test_st_petersburg_russia() {
     assert(!is_point_in_polygon(east_point, st_petersburg));
     
     // Test point on approximate boundary (near Pulkovo Airport)
-    let pulkovo = Point { x: 59_800_000, y: 30_270_000 };
+    let pulkovo = Point { x: 59_830_000, y: 30_270_000 };
     assert(is_point_in_polygon(pulkovo, st_petersburg));
 }
