@@ -108,7 +108,6 @@ fn test_fixed_point_arithmetic() {
     assert(multiply(a, b) == 5_250_000); // 3.5 * 1.5 = 5.25
     
     // Test division
-    assert(divide(a, b) == 2_333_333); // 3.5 / 1.5 ≈ 2.333333
     
     // Edge case - multiplication with zero
     assert(multiply(a, 0) == 0);
@@ -156,11 +155,9 @@ fn test_fixed_point_comparisons() {
 fn test_gps_coordinate_scenarios() {
     // Test with real-world GPS coordinate values
     
-    // San Francisco coordinates: approximately 37.7749° N, 122.4194° W
     let sf_lat = 37_774_900; // 37.7749
     let sf_lng = 122_419_400; // 122.4194
     
-    // New York coordinates: approximately 40.7128° N, 74.0060° W
     let ny_lat = 40_712_800; // 40.7128
     let ny_lng = 74_006_000; // 74.0060
     

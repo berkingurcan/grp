@@ -2,5 +2,6 @@
 name = "grp"
 type = "bin"
 authors = [""]
+description = "Zero-knowledge proof location verification with HDOP validation for GPS data"
 
 [dependencies]

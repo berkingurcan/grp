@@ -13,6 +13,7 @@ The core functionality uses the Ray Casting Algorithm to determine if a point is
 - Privacy-preserving location verification
 - Point-in-Polygon verification with Ray Casting Algorithm
 - Fixed-point arithmetic implementation for GPS coordinates
+- HDOP (Horizontal Dilution of Precision) validation to detect fake GPS data
 - Zero-knowledge proofs with Noir/Aztec
 
 ## Prerequisites
@@ -75,9 +76,21 @@ Since Noir doesn't support floating-point operations, the system uses fixed-poin
 
 The Ray Casting Algorithm works by counting the number of times a ray starting from the point and going in any fixed direction intersects with the polygon's edges. If the count is odd, the point is inside; if even, it's outside.
 
+### HDOP Validation
+
+HDOP (Horizontal Dilution of Precision) validation is implemented to detect and filter out potentially fake GPS data:
+
+- Excellent precision: HDOP ≤ 1.0
+- Good precision: HDOP ≤ 2.0
+- Moderate precision: HDOP ≤ 4.0
+- Poor precision: HDOP ≤ 8.0
+- Rejected: HDOP > 8.0
+
+The circuit rejects any location data with HDOP values above the "Poor" threshold, adding an additional layer of security against GPS spoofing.
+
 ### Zero-Knowledge Verification
 
-The circuit takes private inputs (user's coordinates) and public inputs (polygon vertices), and outputs only a boolean result indicating whether the point is inside the polygon, without revealing the exact location.
+The circuit takes private inputs (user's coordinates and HDOP value) and public inputs (polygon vertices), and outputs only a boolean result indicating whether the point is inside the polygon, without revealing the exact location.
 
 ## Examples
 
@@ -92,20 +105,25 @@ let polygon_y = [1_000_000, 3_000_000, 3_000_000, 1_000_000];
 ### Verifying Location
 
 ```noir
-// Check if a point is inside the polygon
-let result = is_point_in_polygon(user_point, polygon);
+// Check if a point is inside the polygon and has acceptable HDOP
+let inside_lat = 2_000_000; // 2.0 in fixed-point
+let inside_lng = 2_000_000; // 2.0 in fixed-point
+let hdop = 1_500_000; // 1.5 HDOP - good precision
+main(inside_lat, inside_lng, hdop, polygon_x, polygon_y, true);
 ```
 
 ## Security Considerations
 
 - The system never reveals the user's exact coordinates
 - Only the result of the location check is made public
+- HDOP validation helps prevent GPS spoofing attacks
 - The verification is done within a zero-knowledge circuit
 
 ## Future Work
 
 - Support for more complex polygons
 - Optimizations for circuit efficiency
+- Additional GPS data validation methods
 - Additional privacy features
 
 ## License
