@@ -44,3 +44,7 @@ proof.json
 
 # Dependency directories
 cache/ 
+
+venv/
+.venv/
+error.txt
