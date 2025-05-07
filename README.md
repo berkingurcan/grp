@@ -19,7 +19,7 @@ The core functionality uses the Ray Casting Algorithm to determine if a point is
 ## Prerequisites
 
 - [Noir](https://noir-lang.org/)
-- [Aztec Network](https://aztec.network/)
+- [Cario](https://book.cairo-lang.org)
 
 ## Installation
 
@@ -65,6 +65,49 @@ nargo verify --proof proof.json
 - `src/fixed_point.nr`: Implementation of fixed-point arithmetic for GPS coordinates
 - `src/point_in_polygon.nr`: Ray Casting Algorithm for Point-in-Polygon verification
 - `src/main.nr`: Main circuit for the zero-knowledge proof system
+- `grp/src/honk_verifier.cairo`: Cairo contract auto-generated from the Noir circuit for proof verification
+- `grp/src/region_verifier.cairo`: Minimal Cairo contract for region-specific verification, storing polygon vertices and calling the base verifier
+
+## Architecture: Noir Circuit & Cairo Contracts
+
+### 1. Noir Circuit
+- The Noir circuit (`src/main.nr`) defines the zero-knowledge logic for verifying if a user's (private) coordinates are inside a (public) polygon, with HDOP validation.
+- The circuit exposes a `main` function that takes:
+  - User's latitude, longitude, and HDOP (private)
+  - Polygon vertices (public)
+  - Result (public boolean)
+- The circuit is compiled and used to generate proofs off-chain.
+
+### 2. Cairo Contracts
+- `honk_verifier.cairo`: The base verifier contract, auto-generated from the Noir circuit, which verifies proofs on-chain.
+- `region_verifier.cairo`: A minimal contract for each region (polygon). Each instance stores its polygon vertices in storage and exposes a `verify_proof` function. This function calls the base verifier to check the proof.
+- To support multiple regions, deploy a separate `RegionVerifier` contract for each region, each initialized with its own polygon vertices.
+
+#### Minimal Region Verifier Flow
+1. Deploy a `RegionVerifier` contract for each region, passing the polygon vertices to the constructor.
+2. When a user wants to prove they are inside a region:
+   - The user generates a proof off-chain using the Noir circuit, with the region's polygon vertices as public inputs.
+   - The frontend submits the proof to the corresponding `RegionVerifier` contract's `verify_proof` function.
+   - The contract verifies the proof using the base verifier logic and returns the result.
+
+## Notes for Frontend Developers
+
+- **Proof Generation:**
+  - Use the Noir circuit to generate proofs off-chain. The public inputs must match the polygon vertices stored in the target `RegionVerifier` contract.
+  - The proof must include all required witness and hint data as expected by the Cairo verifier.
+
+- **Contract Interaction:**
+  - For each region, obtain the address of the deployed `RegionVerifier` contract (each region has its own contract instance).
+  - Call the `verify_proof` function on the contract, passing the proof data as a `Span<felt252>`.
+  - The contract will return `Some(public_inputs)` if the proof is valid, or `None` if invalid.
+
+- **Polygon Vertices:**
+  - You can fetch the polygon vertices for a region using the `get_vertices` view function on the contract to ensure the frontend uses the correct public inputs for proof generation.
+
+- **Deployment:**
+  - For a proof-of-concept, deploy each region contract manually with its polygon vertices.
+  - For production, consider a factory or registry pattern to manage regions and contracts.
+
 
 ## How It Works
 
