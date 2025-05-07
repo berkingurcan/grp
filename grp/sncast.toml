@@ -1,0 +1,5 @@
+[sncast]
+network = "testnet"  # or "mainnet" for production
+
+[sncast.account]
+account = "default"

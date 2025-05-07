@@ -1,0 +1,23 @@
+# Test case 1: Point inside Central Park with excellent HDOP
+lat_point = 40785000  # 40.785°N
+lng_point = -73965000 # -73.965°W
+hdop = 900000        # 0.9 HDOP (excellent precision)
+polygon_vertices_x = [40768000, 40768000, 40800000, 40800000]
+polygon_vertices_y = [-73982000, -73949000, -73949000, -73982000]
+result = true
+
+# Test case 2: Point outside Central Park (Times Square) with good HDOP
+# lat_point = 40758000  # 40.758°N
+# lng_point = -73985000 # -73.985°W
+# hdop = 1800000       # 1.8 HDOP (good precision)
+# polygon_vertices_x = [40768000, 40768000, 40800000, 40800000]
+# polygon_vertices_y = [-73982000, -73949000, -73949000, -73982000]
+# result = false
+
+# Test case 3: Point on boundary with moderate HDOP
+# lat_point = 40768000  # 40.768°N
+# lng_point = -73965000 # -73.965°W
+# hdop = 3600000       # 3.6 HDOP (moderate precision)
+# polygon_vertices_x = [40768000, 40768000, 40800000, 40800000]
+# polygon_vertices_y = [-73982000, -73949000, -73949000, -73982000]
+# result = true
