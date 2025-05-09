@@ -19,7 +19,9 @@ The core functionality uses the Ray Casting Algorithm to determine if a point is
 ## Prerequisites
 
 - [Noir](https://noir-lang.org/)
-- [Cario](https://book.cairo-lang.org)
+- [Cairo](https://book.cairo-lang.org)
+- [Starknet](https://docs.starknet.io/)
+- [Garaga](https://github.com/keep-starknet-strange/garaga) (Cairo cryptography library, see below)
 
 ## Installation
 
@@ -65,7 +67,7 @@ nargo verify --proof proof.json
 - `src/fixed_point.nr`: Implementation of fixed-point arithmetic for GPS coordinates
 - `src/point_in_polygon.nr`: Ray Casting Algorithm for Point-in-Polygon verification
 - `src/main.nr`: Main circuit for the zero-knowledge proof system
-- `grp/src/honk_verifier.cairo`: Cairo contract auto-generated from the Noir circuit for proof verification
+- `grp/src/honk_verifier.cairo`: Cairo contract auto-generated from the Noir circuit for proof verification (uses Garaga)
 - `grp/src/region_verifier.cairo`: Minimal Cairo contract for region-specific verification, storing polygon vertices and calling the base verifier
 
 ## Architecture: Noir Circuit & Cairo Contracts
@@ -78,9 +80,9 @@ nargo verify --proof proof.json
   - Result (public boolean)
 - The circuit is compiled and used to generate proofs off-chain.
 
-### 2. Cairo Contracts
-- `honk_verifier.cairo`: The base verifier contract, auto-generated from the Noir circuit, which verifies proofs on-chain.
-- `region_verifier.cairo`: A minimal contract for each region (polygon). Each instance stores its polygon vertices in storage and exposes a `verify_proof` function. This function calls the base verifier to check the proof.
+### 2. Cairo Contracts & Garaga
+- `honk_verifier.cairo`: The base verifier contract, auto-generated from the Noir circuit, which verifies proofs on-chain. This contract uses the [Garaga](https://github.com/keep-starknet-strange/garaga) library for cryptographic primitives, elliptic curve operations, and pairing checks on the BN254 curve. Garaga is included as a dependency in the Cairo project (see `Scarb.toml`).
+- `region_verifier.cairo`: A minimal contract for each region (polygon). Each instance stores its polygon vertices in storage and exposes a `verify_proof` function. This function calls the base verifier to check the proof. The contract is written for Starknet and leverages Garaga for secure and efficient ZK proof verification.
 - To support multiple regions, deploy a separate `RegionVerifier` contract for each region, each initialized with its own polygon vertices.
 
 #### Minimal Region Verifier Flow
@@ -95,6 +97,7 @@ nargo verify --proof proof.json
 - **Proof Generation:**
   - Use the Noir circuit to generate proofs off-chain. The public inputs must match the polygon vertices stored in the target `RegionVerifier` contract.
   - The proof must include all required witness and hint data as expected by the Cairo verifier.
+  - For real-world use cases and frontend integration examples, visit [github.com/daniel0ar/noloc](https://github.com/daniel0ar/noloc).
 
 - **Contract Interaction:**
   - For each region, obtain the address of the deployed `RegionVerifier` contract (each region has its own contract instance).
@@ -108,6 +111,9 @@ nargo verify --proof proof.json
   - For a proof-of-concept, deploy each region contract manually with its polygon vertices.
   - For production, consider a factory or registry pattern to manage regions and contracts.
 
+## Further Reading & Use Cases
+
+- For more use cases, frontend integration, and real-world applications, see: [github.com/daniel0ar/noloc](https://github.com/daniel0ar/noloc)
 
 ## How It Works
 
